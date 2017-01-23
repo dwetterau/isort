@@ -164,6 +164,9 @@ def _update_with_config_file(file_path, sections, computed_settings):
                 existing_data = set(computed_settings.get(access_key, default.get(access_key)))
                 if key.startswith('not_'):
                     computed_settings[access_key] = list(existing_data.difference(_as_list(value)))
+                elif not existing_data:
+                    # Preserve the ordering of the input list if we don't have an existing value
+                    computed_settings[access_key] = list(_as_list(value))
                 else:
                     computed_settings[access_key] = list(existing_data.union(_as_list(value)))
         elif existing_value_type == bool and value.lower().strip() == "false":
